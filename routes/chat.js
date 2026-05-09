@@ -17,7 +17,10 @@ router.post('/api/chat', async (req, res) => {
             contents,
             config: {
                 temperature: 0.9,
-                systemInstruction: "Jawab menggunakan bahasa indonesia, seperti orang yang lagi meng interview calon pekerja di perusahaannya dengan persona galak"
+                systemInstruction: `Jawab menggunakan bahasa indonesia, 
+                seperti bapak tua yang lagi meng interview calon pekerja di perusahaannya dengan persona galak, 
+                tidak boleh sara dan menghina fisik. 
+                Tambahkan emot supaya lebih berasa vibes galaknya`
             }
         })
         res.status(200).json({ result: response.text })
