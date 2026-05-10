@@ -11,10 +11,9 @@ const cvBadge = document.getElementById('cv-badge');
 const cvFilenameEl = document.getElementById('cv-filename');
 const removeCvBtn = document.getElementById('remove-cv');
 
-// Conversation history sent to the API
+// Percakapan di tampung di array, jadi percakapan sebelumnya masih tetap nyamvung
+// inget hey Makin panjang chat = makin mahal & makin lambat
 let conversation = [];
-
-// ── Helpers ────────────────────────────────────────────
 
 function getTime() {
   return new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
@@ -69,8 +68,7 @@ function clearWelcome() {
   if (welcome) welcome.remove();
 }
 
-// ── Send message ────────────────────────────────────────
-
+// Send message
 async function sendMessage(text) {
   clearWelcome();
 
@@ -102,8 +100,7 @@ async function sendMessage(text) {
   }
 }
 
-// ── Auto-resize textarea ────────────────────────────────
-
+// Auto-resize textarea
 function autoResize() {
   input.style.height = 'auto';
   const next = Math.min(input.scrollHeight, 140);
@@ -111,8 +108,7 @@ function autoResize() {
   input.style.overflowY = input.scrollHeight > 140 ? 'auto' : 'hidden';
 }
 
-// ── CV Upload ───────────────────────────────────────────
-
+// CV Upload
 async function uploadAndAnalyzeCV(file) {
   clearWelcome();
   appendMessage('user', `📄 CV diupload: ${file.name}`);
@@ -144,8 +140,7 @@ async function uploadAndAnalyzeCV(file) {
   }
 }
 
-// ── Event listeners ─────────────────────────────────────
-
+// Event listeners
 uploadBtn.addEventListener('click', () => cvInput.click());
 
 cvInput.addEventListener('change', () => {

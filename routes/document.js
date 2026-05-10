@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { ai, GEMINI_MODEL, upload } from '../lib/gemini.js'
+import { ai, GEMINI_MODEL, upload, BASE_GEN_CONFIG, SYSTEM_INSTRUCTION } from '../lib/gemini.js'
 
 const router = Router()
 
@@ -14,11 +14,8 @@ router.post('/api/upload-cv', upload.single('cv'), async (req, res) => {
         const response = await ai.models.generateContent({
             model: GEMINI_MODEL,
             config: {
-                temperature: 0.9,
-                systemInstruction: `Jawab menggunakan bahasa indonesia,
-                seperti bapak tua yang lagi meng interview calon pekerja di perusahaannya dengan persona galak,
-                tidak boleh sara dan menghina fisik.
-                Tambahkan emot supaya lebih berasa vibes galaknya`
+                ...BASE_GEN_CONFIG,
+                systemInstruction: SYSTEM_INSTRUCTION,
             },
             contents: [{
                 role: 'user',
