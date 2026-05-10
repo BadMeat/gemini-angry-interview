@@ -5,6 +5,11 @@ const sendBtn = document.getElementById('send-btn');
 const typingIndicator = document.getElementById('typing-indicator');
 const resetBtn = document.getElementById('reset-btn');
 const startBtn = document.getElementById('start-btn');
+const uploadBtn = document.getElementById('upload-btn');
+const cvInput = document.getElementById('cv-input');
+const cvBadge = document.getElementById('cv-badge');
+const cvFilenameEl = document.getElementById('cv-filename');
+const removeCvBtn = document.getElementById('remove-cv');
 
 // Conversation history sent to the API
 let conversation = [];
@@ -53,8 +58,10 @@ function appendMessage(role, text) {
 
 function setLoading(loading) {
   typingIndicator.style.display = loading ? 'flex' : 'none';
-  sendBtn.disabled = loading;
+  sendBtn.disabled = loading || input.value.trim() === '';
   input.disabled = loading;
+  uploadBtn.disabled = loading;
+  uploadBtn.style.opacity = loading ? '0.5' : '1';
 }
 
 function clearWelcome() {
@@ -104,7 +111,60 @@ function autoResize() {
   input.style.overflowY = input.scrollHeight > 140 ? 'auto' : 'hidden';
 }
 
+// ── CV Upload ───────────────────────────────────────────
+
+async function uploadAndAnalyzeCV(file) {
+  clearWelcome();
+  appendMessage('user', `📄 CV diupload: ${file.name}`);
+  setLoading(true);
+
+  try {
+    const formData = new FormData();
+    formData.append('cv', file);
+
+    const res = await fetch('/api/upload-cv', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!res.ok) throw new Error(`Server error: ${res.status}`);
+
+    const data = await res.json();
+    const reply = data.result || 'Maaf, tidak dapat menganalisis CV.';
+
+    conversation.push({ role: 'user', text: `[Kandidat mengupload CV: ${file.name}]` });
+    conversation.push({ role: 'model', text: reply });
+    appendMessage('bot', reply);
+  } catch (err) {
+    appendMessage('bot', 'Gagal menganalisis CV. Pastikan file berformat PDF dan server berjalan.');
+  } finally {
+    setLoading(false);
+    cvBadge.style.display = 'none';
+    uploadBtn.classList.remove('has-file');
+  }
+}
+
 // ── Event listeners ─────────────────────────────────────
+
+uploadBtn.addEventListener('click', () => cvInput.click());
+
+cvInput.addEventListener('change', () => {
+  const file = cvInput.files[0];
+  if (!file) return;
+
+  cvFilenameEl.textContent = file.name;
+  cvBadge.style.display = 'flex';
+  uploadBtn.classList.add('has-file');
+  cvInput.value = '';
+
+  uploadAndAnalyzeCV(file);
+});
+
+removeCvBtn.addEventListener('click', () => {
+  cvBadge.style.display = 'none';
+  uploadBtn.classList.remove('has-file');
+  cvInput.value = '';
+});
 
 input.addEventListener('input', () => {
   autoResize();
@@ -138,8 +198,11 @@ resetBtn?.addEventListener('click', () => {
     <div class="welcome-message">
       <div class="welcome-icon">🏢</div>
       <h2>Selamat Datang di Sesi Interview</h2>
-      <p>Halo! Saya adalah HRD dari perusahaan kami. Saya akan memandu Anda melalui sesi interview hari ini. Silakan perkenalkan diri Anda terlebih dahulu.</p>
-      <button id="start-btn" class="start-btn">Mulai Interview →</button>
+      <p>Halo! Saya adalah HRD dari perusahaan kami. Upload CV Anda untuk sesi interview yang lebih personal, atau langsung mulai perkenalkan diri Anda.</p>
+      <div class="welcome-actions">
+        <label for="cv-input" class="upload-cv-btn">📄 Upload CV</label>
+        <button id="start-btn" class="start-btn">Mulai Interview →</button>
+      </div>
     </div>
   `;
   document.getElementById('start-btn')?.addEventListener('click', () => {

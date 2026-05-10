@@ -2,6 +2,26 @@
 
 Chatbot simulasi wawancara kerja berbasis AI menggunakan Google Gemini. Berperan sebagai HRD yang tegas dan memberikan pertanyaan interview dalam Bahasa Indonesia.
 
+## Fitur
+
+### 🤖 Persona HRD Galak
+AI berperan sebagai HRD senior yang tegas dan galak. Setiap respons menggunakan Bahasa Indonesia disertai ekspresi emot untuk memperkuat suasana interview yang intens.
+
+### 📄 Upload CV (PDF)
+Kandidat dapat mengupload file CV dalam format PDF. Gemini akan membaca dan menganalisis isi CV secara otomatis, lalu langsung mengajukan pertanyaan interview yang relevan sesuai pengalaman dan skill yang tertera di CV.
+
+### 💬 Riwayat Percakapan
+Seluruh percakapan tersimpan sebagai konteks selama sesi berlangsung. AI mengingat jawaban-jawaban sebelumnya sehingga pertanyaan berikutnya tetap relevan dan mengalir seperti interview nyata.
+
+### ⌨️ Input Teks Adaptif
+Textarea otomatis menyesuaikan tinggi mengikuti panjang teks yang diketik (hingga 140px), serta mendukung pengiriman pesan dengan `Enter` dan baris baru dengan `Shift+Enter`.
+
+### 🔄 Mulai Ulang Sesi
+Tombol reset di sidebar menghapus seluruh riwayat percakapan dan mengembalikan tampilan ke layar sambutan, siap untuk sesi interview baru.
+
+### 📱 Responsive
+Tampilan menyesuaikan layar mobile — sidebar disembunyikan dan layout chat dioptimalkan untuk layar kecil.
+
 ## Screenshot
 
 ### Tampilan Awal
@@ -12,6 +32,9 @@ Chatbot simulasi wawancara kerja berbasis AI menggunakan Google Gemini. Berperan
 
 ### Error Koneksi
 ![Tampilan Error](Screenshot/3-tampilan_chat_error.png)
+
+### Upload File
+![Tampilan Upload](Screenshot/4-upload_file.png)
 
 ## Tech Stack
 
@@ -46,20 +69,28 @@ Buka browser di `http://localhost:3000`
 
 ```
 chatbot-gemini/
-├── index.js          # Express app setup
+├── index.js              # Express app setup
 ├── routes/
-│   └── chat.js       # Endpoint POST /api/chat
+│   ├── chat.js           # Endpoint POST /api/chat
+│   └── document.js       # Endpoint POST /api/upload-cv
 ├── lib/
-│   └── gemini.js     # GoogleGenAI client
-├── public/           # Static frontend
+│   └── gemini.js         # GoogleGenAI client & multer instance
+├── public/               # Static frontend
 │   ├── index.html
 │   ├── style.css
 │   └── script.js
-└── Screenshot/       # Screenshot tampilan
+└── Screenshot/           # Screenshot tampilan
 ```
 
 ## Cara Kerja
 
+### Alur Chat Biasa
 1. Frontend (`public/script.js`) mengirim `POST /api/chat` dengan body `{ conversation: [{role, text}] }`
-2. `routes/chat.js` mengkonversi ke format Gemini dan memanggil `ai.models.generateContent`
+2. `routes/chat.js` mengkonversi ke format Gemini (`contents: [{role, parts: [{text}]}]`) dan memanggil `ai.models.generateContent`
 3. Response dikembalikan sebagai `{ result: string }`
+
+### Alur Upload CV
+1. Frontend mengirim `POST /api/upload-cv` sebagai `multipart/form-data` dengan field `cv` (file PDF)
+2. `routes/document.js` menerima file via multer, mengkonversi ke base64, lalu mengirim ke Gemini sebagai `inlineData`
+3. Gemini membaca isi PDF dan merespons dengan pertanyaan interview berbasis profil CV
+4. Respons dan konteks CV disimpan ke `conversation` agar percakapan lanjutan tetap relevan
