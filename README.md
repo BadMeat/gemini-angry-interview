@@ -30,11 +30,11 @@ Tampilan menyesuaikan layar mobile — sidebar disembunyikan dan layout chat dio
 ### Sesi Chat Berjalan
 ![Tampilan Chat](Screenshot/2-tampilan_chat.png)
 
-### Error Koneksi
-![Tampilan Error](Screenshot/3-tampilan_chat_error.png)
-
 ### Upload File
 ![Tampilan Upload](Screenshot/4-upload_file.png)
+
+### Error Koneksi
+![Tampilan Error](Screenshot/3-tampilan_chat_error.png)
 
 ## Tech Stack
 
