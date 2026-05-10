@@ -94,3 +94,10 @@ chatbot-gemini/
 2. `routes/document.js` menerima file via multer, mengkonversi ke base64, lalu mengirim ke Gemini sebagai `inlineData`
 3. Gemini membaca isi PDF dan merespons dengan pertanyaan interview berbasis profil CV
 4. Respons dan konteks CV disimpan ke `conversation` agar percakapan lanjutan tetap relevan
+
+
+## Referensi
+
+- [Unicode Full Emoji List](https://unicode.org/emoji/charts/full-emoji-list.html) — daftar lengkap emoji
+- [Flaticon](https://www.flaticon.com/) — sumber icon untuk tab browser
+- [Gemini API](https://aistudio.google.com/api-keys) - api key
