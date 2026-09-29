@@ -4,7 +4,7 @@ Chatbot simulasi wawancara kerja berbasis AI menggunakan Google Gemini. Berperan
 
 ## Fiturs
 
-### 🤖 Persona HRD Galak
+### 🤖 Persona HRD Galaks
 AI berperan sebagai HRD senior yang tegas dan galak. Setiap respons menggunakan Bahasa Indonesia disertai ekspresi emot untuk memperkuat suasana interview yang intens.
 
 ### 📄 Upload CV (PDF)
