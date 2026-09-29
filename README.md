@@ -1,4 +1,4 @@
- # AI Interview Simulator
+ # AI Interview Simulators
 
 Chatbot simulasi wawancara kerja berbasis AI menggunakan Google Gemini. Berperan sebagai HRD yang tegas dan memberikan pertanyaan interview dalam Bahasa Indonesia.
 
